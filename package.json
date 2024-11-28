@@ -6,7 +6,8 @@
   "scripts": {
     "start:dev": "tsx watch src/server.ts",
     "start": "node dist/server.js",
-    "build": "tsup src --out-dir dist"
+    "build": "tsup src --out-dir dist",
+    "migrate:dev": "prisma migrate dev"
   },
   "keywords": [],
   "author": "",
