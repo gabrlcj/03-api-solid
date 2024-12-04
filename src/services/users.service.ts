@@ -1,5 +1,5 @@
 import { hash } from 'bcryptjs';
-import { PrismaUsersRepository } from '@/repositories/prisma-users-repository';
+import { UsersRepository } from '@/repositories/interfaces/users-repository';
 
 interface CreateUserParams {
   name: string;
@@ -8,12 +8,12 @@ interface CreateUserParams {
 }
 
 export class UsersService {
-  constructor(private usersRepository: PrismaUsersRepository) {}
+  constructor(private usersRepository: UsersRepository) {}
 
   async createUserService({ name, email, password }: CreateUserParams) {
     const password_hash = await hash(password, 6);
 
-    const userWithSameEmail = await this.usersRepository.findByUnique(email);
+    const userWithSameEmail = await this.usersRepository.findByEmail(email);
 
     if (userWithSameEmail) {
       throw new Error('Email already exists.');
