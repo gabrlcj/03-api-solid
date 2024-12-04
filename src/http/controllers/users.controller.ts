@@ -12,7 +12,7 @@ export async function createUser(request: FastifyRequest, reply: FastifyReply) {
   const { name, email, password } = createUserBodySchema.parse(request.body);
 
   try {
-    createUserService({ name, email, password });
+    await createUserService({ name, email, password });
   } catch (error) {
     return reply.status(409).send();
   }
