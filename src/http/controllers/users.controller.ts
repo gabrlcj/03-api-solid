@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { UsersService } from '@/services/users.service';
-import { PrismaUsersRepository } from '@/repositories/prisma-users-repository';
+import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository';
 import { UserAlreadyExistsError } from '@/services/errors/user-already-exists';
 
 export async function createUser(request: FastifyRequest, reply: FastifyReply) {
