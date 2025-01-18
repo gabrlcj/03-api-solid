@@ -1,11 +1,10 @@
 import { User } from '@prisma/client';
 
-export interface CreateUserParams {
-  name: string;
+export interface AuthenticateUserRequest {
   email: string;
   password: string;
 }
 
-export interface CreateUserResponse {
+export interface AuthenticateUserResponse {
   user: User;
 }

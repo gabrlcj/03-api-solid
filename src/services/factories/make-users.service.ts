@@ -1,4 +1,4 @@
-import { UsersService } from '../users.service';
+import { UsersService } from '../register';
 import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository';
 
 export function makeUsersService() {
