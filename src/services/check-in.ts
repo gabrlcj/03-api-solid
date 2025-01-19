@@ -5,6 +5,12 @@ export class CheckInService {
   constructor(private checkInsRepository: CheckInsRepository) {}
 
   async execute({ userId, gymId }: CheckInRequest): Promise<CheckInResponse> {
+    const checkInOnSameDay = await this.checkInsRepository.findCheckInByUserOnDate(userId, new Date());
+
+    if (checkInOnSameDay) {
+      throw new Error();
+    }
+
     const checkIn = await this.checkInsRepository.create({ user_id: userId, gym_id: gymId });
 
     return { checkIn };
