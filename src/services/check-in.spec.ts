@@ -1,14 +1,27 @@
 import { CheckInService } from './check-in';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins.repository';
+import { InMemoryGymsRepository } from '@/repositories/in-memory/in-memory-gyms.repository';
+import { Decimal } from '@prisma/client/runtime/library';
 
 let checkInRepository: InMemoryCheckInsRepository;
+let gymsRepository: InMemoryGymsRepository;
 let sut: CheckInService;
 
 describe('Check-in Service', () => {
   beforeEach(() => {
     checkInRepository = new InMemoryCheckInsRepository();
-    sut = new CheckInService(checkInRepository);
+    gymsRepository = new InMemoryGymsRepository();
+    sut = new CheckInService(checkInRepository, gymsRepository);
+
+    gymsRepository.items.push({
+      id: 'gym-01',
+      name: 'Javascript Gym',
+      description: '',
+      latitude: new Decimal(-25.4677022),
+      longitude: new Decimal(-49.2942842),
+      phone: '',
+    });
 
     vi.useFakeTimers();
   });
@@ -19,8 +32,10 @@ describe('Check-in Service', () => {
 
   it('should be able to check in', async () => {
     const { checkIn } = await sut.execute({
-      userId: 'user-id',
-      gymId: 'gym-id',
+      userId: 'user-01',
+      gymId: 'gym-01',
+      userLatitude: -25.4677022,
+      userLongitude: -49.2942842,
     });
 
     expect(checkIn.id).toEqual(expect.any(String));
@@ -30,14 +45,18 @@ describe('Check-in Service', () => {
     vi.setSystemTime(new Date(2000, 0, 20, 0, 0, 0));
 
     await sut.execute({
-      userId: 'user-id',
-      gymId: 'gym-id',
+      userId: 'user-01',
+      gymId: 'gym-01',
+      userLatitude: -25.4677022,
+      userLongitude: -49.2942842,
     });
 
     await expect(() =>
       sut.execute({
-        userId: 'user-id',
-        gymId: 'gym-id',
+        userId: 'user-01',
+        gymId: 'gym-01',
+        userLatitude: -25.4677022,
+        userLongitude: -49.2942842,
       })
     ).rejects.toBeInstanceOf(Error);
   });
@@ -46,17 +65,41 @@ describe('Check-in Service', () => {
     vi.setSystemTime(new Date(2000, 0, 20, 8, 0, 0));
 
     await sut.execute({
-      userId: 'user-id',
-      gymId: 'gym-id',
+      userId: 'user-01',
+      gymId: 'gym-01',
+      userLatitude: -25.4677022,
+      userLongitude: -49.2942842,
     });
 
     vi.setSystemTime(new Date(2000, 0, 21, 8, 0, 0));
 
     const { checkIn } = await sut.execute({
-      userId: 'user-id',
-      gymId: 'gym-id',
+      userId: 'user-01',
+      gymId: 'gym-01',
+      userLatitude: -25.4677022,
+      userLongitude: -49.2942842,
     });
 
     expect(checkIn.id).toEqual(expect.any(String));
+  });
+
+  it('should not be able to check in on distant gym', async () => {
+    gymsRepository.items.push({
+      id: 'gym-02',
+      name: 'Javascript Gym',
+      description: '',
+      latitude: new Decimal(-25.4467779),
+      longitude: new Decimal(-49.2540725),
+      phone: '',
+    });
+
+    await expect(() =>
+      sut.execute({
+        userId: 'user-01',
+        gymId: 'gym-02',
+        userLatitude: -25.4677022,
+        userLongitude: -49.2942842,
+      })
+    ).rejects.toBeInstanceOf(Error);
   });
 });
