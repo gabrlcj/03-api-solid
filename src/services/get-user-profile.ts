@@ -1,6 +1,6 @@
 import { ResourceNotFoundError } from './errors/resource-not-found';
 import { UsersRepository } from '@/repositories/interfaces/users-repository';
-import { GetUserProfileParams, GetUserProfileResponse } from '@/services/interfaces/get-user-profile.interface';
+import { GetUserProfileParams, GetUserProfileResponse } from '@/services/interfaces/get-user-profile';
 
 export class GetUserProfileService {
   constructor(private usersRepository: UsersRepository) {}

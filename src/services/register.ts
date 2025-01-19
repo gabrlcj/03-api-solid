@@ -1,7 +1,7 @@
 import { hash } from 'bcryptjs';
 import { UserAlreadyExistsError } from './errors/user-already-exists';
 import { UsersRepository } from '@/repositories/interfaces/users-repository';
-import { RegisterUserParams, RegisterUserResponse } from '@/services/interfaces/register-user.interface';
+import { RegisterUserParams, RegisterUserResponse } from '@/services/interfaces/register-user';
 
 export class RegisterService {
   constructor(private usersRepository: UsersRepository) {}
