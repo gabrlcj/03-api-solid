@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { InvalidCredentialsError } from '@/services/errors/invalid-credentials';
-import { makeAuthenticateService } from '@/services/factories/make-authenticate.service';
+import { makeAuthenticateService } from '@/services/factories/make-authenticate';
 
 export async function authenticateUser(request: FastifyRequest, reply: FastifyReply) {
   const authenticateUserBodySchema = z.object({

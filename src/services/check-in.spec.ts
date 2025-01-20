@@ -3,24 +3,26 @@ import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins.repository';
 import { InMemoryGymsRepository } from '@/repositories/in-memory/in-memory-gyms.repository';
 import { Decimal } from '@prisma/client/runtime/library';
+import { MaxNumberOfCheckInsError } from './errors/max-number-of-check-ins';
+import { MaxDistanceError } from './errors/max-distance';
 
 let checkInRepository: InMemoryCheckInsRepository;
 let gymsRepository: InMemoryGymsRepository;
 let sut: CheckInService;
 
 describe('Check-in Service', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     checkInRepository = new InMemoryCheckInsRepository();
     gymsRepository = new InMemoryGymsRepository();
     sut = new CheckInService(checkInRepository, gymsRepository);
 
-    gymsRepository.items.push({
+    await gymsRepository.create({
       id: 'gym-01',
       name: 'Javascript Gym',
-      description: '',
-      latitude: new Decimal(-25.4677022),
-      longitude: new Decimal(-49.2942842),
-      phone: '',
+      description: null,
+      phone: null,
+      latitude: -25.4677022,
+      longitude: -49.2942842,
     });
 
     vi.useFakeTimers();
@@ -58,7 +60,7 @@ describe('Check-in Service', () => {
         userLatitude: -25.4677022,
         userLongitude: -49.2942842,
       })
-    ).rejects.toBeInstanceOf(Error);
+    ).rejects.toBeInstanceOf(MaxNumberOfCheckInsError);
   });
 
   it('should be able to check in twice in different days', async () => {
@@ -91,6 +93,7 @@ describe('Check-in Service', () => {
       latitude: new Decimal(-25.4467779),
       longitude: new Decimal(-49.2540725),
       phone: '',
+      created_at: new Date(),
     });
 
     await expect(() =>
@@ -100,6 +103,6 @@ describe('Check-in Service', () => {
         userLatitude: -25.4677022,
         userLongitude: -49.2942842,
       })
-    ).rejects.toBeInstanceOf(Error);
+    ).rejects.toBeInstanceOf(MaxDistanceError);
   });
 });
