@@ -19,7 +19,7 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     return checkIn;
   }
 
-  async findCheckInByUserOnDate(userId: string, date: Date) {
+  async findByUserIdOnDate(userId: string, date: Date) {
     const checkInOnSameDay = this.items.find(
       (checkIn) => checkIn.user_id === userId && checkIn.created_at.toDateString() === date.toDateString()
     );
@@ -29,5 +29,9 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     }
 
     return checkInOnSameDay;
+  }
+
+  async findManyByUserId(userId: string, page: number): Promise<CheckIn[]> {
+    return this.items.filter((checkIn) => checkIn.user_id === userId).slice((page - 1) * 20, page * 20);
   }
 }
