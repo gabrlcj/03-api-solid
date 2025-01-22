@@ -5,7 +5,7 @@ import { GetUserMetricsService } from './get-user-metrics';
 let checkInRepository: InMemoryCheckInsRepository;
 let sut: GetUserMetricsService;
 
-describe('Get user metrics Service', () => {
+describe('Get User Metrics Service', () => {
   beforeEach(async () => {
     checkInRepository = new InMemoryCheckInsRepository();
     sut = new GetUserMetricsService(checkInRepository);
