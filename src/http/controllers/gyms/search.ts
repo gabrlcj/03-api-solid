@@ -12,9 +12,7 @@ export async function search(request: FastifyRequest, reply: FastifyReply) {
 
   const searchGymsService = makeSerchGymsService();
 
-  const gyms = await searchGymsService.execute({ search: query, page });
+  const { gyms } = await searchGymsService.execute({ search: query, page });
 
-  return reply.status(200).send({
-    gyms,
-  });
+  return reply.status(200).send({ gyms });
 }
