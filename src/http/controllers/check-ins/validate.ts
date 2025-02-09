@@ -14,11 +14,9 @@ export async function validate(request: FastifyRequest, reply: FastifyReply) {
   try {
     const validateCheckInService = makeValidateCheckInService();
 
-    const checkIn = await validateCheckInService.execute({ checkInId });
+    await validateCheckInService.execute({ checkInId });
 
-    return reply.status(200).send({
-      checkIn,
-    });
+    return reply.status(204).send();
   } catch (error) {
     if (error instanceof ResourceNotFoundError) {
       return reply.status(409).send({ message: error.message });

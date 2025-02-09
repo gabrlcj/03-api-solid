@@ -25,16 +25,14 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
   try {
     const createCheckInService = makeCheckInService();
 
-    const checkIn = await createCheckInService.execute({
+    await createCheckInService.execute({
       userId: request.user.sub,
       gymId,
       userLatitude: latitude,
       userLongitude: longitude,
     });
 
-    return reply.status(200).send({
-      checkIn,
-    });
+    return reply.status(201).send();
   } catch (error) {
     if (error instanceof ResourceNotFoundError) {
       return reply.status(409).send({ message: error.message });

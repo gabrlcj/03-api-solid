@@ -11,9 +11,7 @@ export async function history(request: FastifyRequest, reply: FastifyReply) {
 
   const fetchUserCheckInsHistoryService = makeFetchUserCheckInsHistoryService();
 
-  const checkIns = await fetchUserCheckInsHistoryService.execute({ userId: request.user.sub, page });
+  const { checkIns } = await fetchUserCheckInsHistoryService.execute({ userId: request.user.sub, page });
 
-  return reply.status(200).send({
-    checkIns,
-  });
+  return reply.status(200).send({ checkIns });
 }
